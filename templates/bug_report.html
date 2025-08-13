@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Bug Report</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 800px;
+            margin: 50px auto;
+            background-color: #fff;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+        }
+        h2 {
+            color: #333;
+            margin-bottom: 25px;
+        }
+        ul {
+            list-style-type: none;
+            padding-left: 0;
+        }
+        li {
+            background: #ffe6e6;
+            margin: 10px 0;
+            padding: 15px;
+            border-left: 6px solid #ff4d4d;
+            border-radius: 6px;
+            font-size: 16px;
+        }
+        p {
+            background: #e0ffe0;
+            padding: 15px;
+            border-left: 6px solid #28a745;
+            border-radius: 6px;
+            font-size: 16px;
+        }
+        .nav-links {
+            margin-top: 30px;
+        }
+        .nav-links a {
+            display: inline-block;
+            margin-right: 15px;
+            text-decoration: none;
+            background-color: #007bff;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 8px;
+            transition: background-color 0.3s ease;
+        }
+        .nav-links a:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>🐞 Bug Report</h2>
+
+        {% if issues %}
+            <ul>
+                {% for line, msg in issues %}
+                    <li><strong>Line {{ line }}:</strong> {{ msg }}</li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>No common issues found. Looks good ✅</p>
+        {% endif %}
+
+        <div class="nav-links">
+            <a href="/analyze/">← Back to GitHub Analyzer</a>
+            <a href="{% url 'chatbot_view' %}">🤖 Ask the AI Bot</a>
+        </div>
+    </div>
+</body>
+</html>

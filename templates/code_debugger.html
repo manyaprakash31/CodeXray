@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Code Debugger</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: #0f0f0f;
+            color: #fff;
+            padding: 30px;
+            max-width: 1000px;
+            margin: auto;
+        }
+
+        h1, h2 {
+            color: #00ffe7;
+            text-shadow: 0 0 10px #00ffe7;
+        }
+
+        textarea, input[type="text"], select {
+            width: 100%;
+            padding: 12px;
+            margin-top: 10px;
+            font-size: 16px;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.05);
+            color: #fff;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(12px);
+        }
+
+        button {
+            padding: 12px 24px;
+            font-size: 16px;
+            margin: 10px 10px 0 0;
+            cursor: pointer;
+            border: none;
+            border-radius: 10px;
+            background-color: #00ffe7;
+            color: #000;
+            font-weight: bold;
+            box-shadow: 0 0 10px #00ffe7;
+            transition: all 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #00bfa6;
+            box-shadow: 0 0 15px #00bfa6;
+        }
+
+        .section {
+            display: none;
+            margin-top: 30px;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 20px;
+            border-radius: 16px;
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .chat-block {
+            margin-top: 20px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 12px;
+            padding: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .user-msg {
+            background-color: rgba(0, 170, 255, 0.1);
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 12px;
+            white-space: pre-wrap;
+        }
+
+        .ai-msg {
+            background-color: rgba(57, 255, 20, 0.08);
+            padding: 12px 40px 12px 12px;
+            border-radius: 8px;
+            position: relative;
+            white-space: pre-wrap;
+        }
+
+        .copy-btn {
+            position: absolute;
+            right: 10px;
+            top: 10px;
+            font-size: 12px;
+            color: #00ffe7;
+            background: rgba(0,0,0,0.3);
+            border: 1px solid #00ffe7;
+            border-radius: 6px;
+            padding: 4px 8px;
+            cursor: pointer;
+        }
+
+        .top-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 25px;
+        }
+
+        .code-block {
+            background-color: rgba(255, 255, 255, 0.04);
+            padding: 10px;
+            border-radius: 6px;
+            font-family: monospace;
+            white-space: pre-wrap;
+            color: #00ffe7;
+        }
+    </style>
+</head>
+<body>
+    <h1>Code Debugger</h1>
+
+    <div class="top-buttons">
+        <button onclick="toggleSection('generate')">🧠 Generate Code from AI</button>
+        <button onclick="toggleSection('debug')">🔍 Debug Code</button>
+        <button onclick="redirectToHistory()">📜 Code History</button>
+    </div>
+
+    <div id="generate" class="section">
+        <h2>Generate Code</h2>
+        <input type="text" id="prompt" placeholder="Describe the code to generate (e.g., 'merge sort')">
+        <select id="genLang">
+            <option value="python">Python</option>
+            <option value="java">Java</option>
+            <option value="c">C</option>
+            <option value="cpp">C++</option>
+            <option value="javascript">JavaScript</option>
+        </select>
+        <button id="generateBtn">Generate</button>
+        <div id="generateResult"></div>
+    </div>
+
+    <div id="debug" class="section">
+        <h2>Debug Code</h2>
+        <select id="langSelect">
+            <option value="python">Python</option>
+            <option value="java">Java</option>
+            <option value="c">C</option>
+            <option value="cpp">C++</option>
+            <option value="javascript">JavaScript</option>
+        </select>
+        <textarea id="inputCode" rows="6" placeholder="Paste your buggy code here..."></textarea>
+        <button id="debugBtn">Debug</button>
+        <div id="debugResult"></div>
+    </div>
+
+    <script>
+        function toggleSection(sectionId) {
+            document.getElementById('generate').style.display = 'none';
+            document.getElementById('debug').style.display = 'none';
+            document.getElementById(sectionId).style.display = 'block';
+        }
+
+        function getCSRFToken() {
+            let cookieValue = null;
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.startsWith('csrftoken=')) {
+                    cookieValue = cookie.substring('csrftoken='.length);
+                    break;
+                }
+            }
+            return cookieValue;
+        }
+
+        function createChatBlock(userText, aiCode) {
+            const block = document.createElement('div');
+            block.className = 'chat-block';
+
+            const user = document.createElement('div');
+            user.className = 'user-msg';
+            user.textContent = userText;
+
+            const ai = document.createElement('div');
+            ai.className = 'ai-msg';
+
+            const pre = document.createElement('pre');
+            pre.className = 'code-block';
+            pre.textContent = aiCode;
+
+            const copyBtn = document.createElement('button');
+            copyBtn.className = 'copy-btn';
+            copyBtn.textContent = 'Copy';
+            copyBtn.onclick = function () {
+                navigator.clipboard.writeText(aiCode).then(() => {
+                    this.textContent = 'Copied!';
+                    setTimeout(() => this.textContent = 'Copy', 1000);
+                });
+            };
+
+            ai.appendChild(copyBtn);
+            ai.appendChild(pre);
+
+            block.appendChild(user);
+            block.appendChild(ai);
+            return block;
+        }
+
+        function redirectToHistory() {
+            fetch("{% url 'bug_detector:debug_history' %}", {
+                method: "GET",
+            }).then(response => {
+                if (response.redirected) {
+                    window.location.href = response.url;
+                } else if (response.status === 403 || response.status === 401) {
+                    if (confirm("You need to log in to view your history. Click OK to login or Cancel to sign up.")) {
+                        window.location.href = "{% url 'login' %}";
+                    } else {
+                        window.location.href = "{% url 'signup' %}";
+                    }
+                } else {
+                    window.location.href = response.url;
+                }
+            });
+        }
+
+        document.getElementById("generateBtn").addEventListener("click", async function () {
+            const btn = this;
+            btn.disabled = true;
+            btn.textContent = 'Generating...';
+
+            const prompt = document.getElementById("prompt").value;
+            const language = document.getElementById("genLang").value;
+
+            const response = await fetch("{% url 'bug_detector:generate_code' %}", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRFToken": getCSRFToken()
+                },
+                body: JSON.stringify({ prompt, language })
+            });
+            const data = await response.json();
+
+            const resultDiv = document.getElementById("generateResult");
+            resultDiv.appendChild(createChatBlock(prompt, data.code || data.error));
+
+            btn.disabled = false;
+            btn.textContent = 'Generate';
+        });
+
+        document.getElementById("debugBtn").addEventListener("click", async function () {
+            const btn = this;
+            btn.disabled = true;
+            btn.textContent = 'Debugging...';
+
+            const code = document.getElementById("inputCode").value;
+            const language = document.getElementById("langSelect").value;
+
+            const response = await fetch("{% url 'bug_detector:debug_code' %}", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRFToken": getCSRFToken()
+                },
+                body: JSON.stringify({ code, language })
+            });
+            const data = await response.json();
+
+            const resultDiv = document.getElementById("debugResult");
+            resultDiv.appendChild(createChatBlock(code, data.corrected_code || data.error));
+
+            btn.disabled = false;
+            btn.textContent = 'Debug';
+        });
+    </script>
+</body>
+</html>

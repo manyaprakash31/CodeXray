@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-5" style="max-width: 1000px;">
+
+  <div style="
+      backdrop-filter: blur(20px);
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 20px;
+      padding: 30px;
+      box-shadow: 0 0 30px rgba(0, 255, 255, 0.2);
+      color: #f1f1f1;
+  ">
+
+    <h2 class="mb-4" style="color: #0ff; font-weight: bold;">📄 Analysis Details</h2>
+
+    <div class="mb-4">
+      <p><strong style="color: #0ff;">📂 Repo:</strong> {{ item.repo_name }}</p>
+      <p><strong style="color: #0ff;">📝 File:</strong> {{ item.file_path }}</p>
+      <p><strong style="color: #0ff;">📅 Analyzed On:</strong> {{ item.created_at }}</p>
+    </div>
+
+    <h5 style="color: #00f7ff; font-weight: bold;">🔍 Code:</h5>
+    <pre style="
+        background: rgba(0, 0, 0, 0.4);
+        border-left: 3px solid #0ff;
+        padding: 20px;
+        border-radius: 10px;
+        color: #e0e0e0;
+        overflow-x: auto;
+    ">{{ item.code }}</pre>
+
+    <h5 style="color: #00f7ff; font-weight: bold;" class="mt-4">📈 Analysis:</h5>
+    <div style="
+        white-space: pre-wrap;
+        background: rgba(0, 0, 0, 0.4);
+        padding: 20px;
+        border-radius: 10px;
+        border-left: 3px solid #00f7ff;
+        margin-bottom: 20px;
+        color: #f0f0f0;
+    ">
+      {{ item.analysis }}
+    </div>
+
+    <h5 style="color: #ff2dfc; font-weight: bold;">🛠️ Bug Detection:</h5>
+    <div style="
+        white-space: pre-wrap;
+        background: rgba(0, 0, 0, 0.4);
+        padding: 20px;
+        border-radius: 10px;
+        border-left: 3px solid #ff2dfc;
+        color: #f0f0f0;
+    ">
+      {{ item.bug_analysis }}
+    </div>
+
+    <a href="{% url 'user_history' %}" class="btn mt-4" style="
+        background: linear-gradient(135deg, #00f7ff, #ff2dfc);
+        border: none;
+        color: black;
+        font-weight: bold;
+        padding: 10px 20px;
+        border-radius: 30px;
+        transition: all 0.3s ease;
+        text-decoration: none;
+    " onmouseover="this.style.opacity='0.8'" onmouseout="this.style.opacity='1'">⬅ Back to History</a>
+
+  </div>
+
+</div>
+{% endblock %}

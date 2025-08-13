@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>CodeXray</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <!-- Tailwind CSS (replaces Bootstrap for neon & glass effects) -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <style>
+    /* Loader overlay */
+    #loader {
+      display: none;
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0, 0, 0, 0.6);
+      z-index: 9999;
+      text-align: center;
+      padding-top: 20%;
+      font-size: 22px;
+      font-weight: bold;
+      color: #00ffe0;
+    }
+
+    body.loading #loader {
+      display: block;
+    }
+
+    /* Neon glow effect */
+    .neon-text {
+      text-shadow: 0 0 5px #00ffe0, 0 0 10px #00ffe0, 0 0 20px #00ffe0;
+    }
+
+    .glass {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+  </style>
+</head>
+<body class="bg-gradient-to-br from-[#0f0c29] via-[#302b63] to-[#24243e] text-white min-h-screen font-sans">
+
+  <!-- Loader -->
+  <div id="loader">
+    <div class="animate-spin rounded-full h-12 w-12 border-t-4 border-b-4 border-cyan-400 mx-auto"></div>
+    <p class="mt-3">Loading... Please wait</p>
+  </div>
+
+  <!-- Navbar -->
+  <nav class="fixed top-0 w-full z-50 bg-black/30 backdrop-blur-md border-b border-white/10">
+    <div class="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
+      <a href="/" class="text-2xl font-bold neon-text">CodeXray 🔎</a>
+      <div>
+        {% if request.user.is_authenticated %}
+          <span class="text-cyan-200 mr-4">Hi, {{ request.user.username }}</span>
+          <a href="/users/logout/" class="px-4 py-1 border border-cyan-400 text-cyan-400 rounded hover:bg-cyan-400 hover:text-black transition">Logout</a>
+        {% else %}
+          <a href="/users/login/" class="px-4 py-1 border border-cyan-400 text-cyan-400 rounded hover:bg-cyan-400 hover:text-black transition">Login</a>
+        {% endif %}
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main content area -->
+  <main class="pt-24 px-4">
+    <div class="max-w-6xl mx-auto glass p-6 rounded-2xl shadow-xl">
+      {% block content %}
+      {% endblock %}
+    </div>
+  </main>
+
+  <!-- Chatbot & Form Loader Script -->
+  <script>
+    function showLoader() {
+      document.body.classList.add("loading");
+    }
+
+    function hideLoader() {
+      document.body.classList.remove("loading");
+    }
+
+    document.addEventListener("DOMContentLoaded", function () {
+      document.querySelectorAll("form").forEach(form => {
+        form.addEventListener("submit", function () {
+          showLoader();
+        });
+      });
+
+      const chatForm = document.getElementById("chat-form");
+      if (chatForm) {
+        chatForm.addEventListener("submit", function (e) {
+          e.preventDefault();
+          showLoader();
+
+          const questionInput = document.getElementById("question");
+          const chatBox = document.getElementById("chat-history");
+          const question = questionInput.value.trim();
+
+          if (!question) {
+            hideLoader();
+            return;
+          }
+
+          chatBox.innerHTML += `<p><strong>👤 You:</strong> ${question}</p>`;
+          questionInput.value = "";
+
+          fetch("{% url 'chatbot_view' %}", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/x-www-form-urlencoded",
+              "X-CSRFToken": "{{ csrf_token }}"
+            },
+            body: `question=${encodeURIComponent(question)}`
+          })
+          .then(res => res.json())
+          .then(data => {
+            chatBox.innerHTML += `<p><strong>🤖 Bot:</strong> ${data.response}</p>`;
+            chatBox.scrollTop = chatBox.scrollHeight;
+          })
+          .catch(() => {
+            chatBox.innerHTML += `<p><strong>⚠️ Bot:</strong> Error occurred.</p>`;
+          })
+          .finally(() => {
+            hideLoader();
+          });
+        });
+      }
+    });
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Analysis Report</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(145deg, #0f0f0f, #1a1a1a);
+            color: #e0e0e0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 30px;
+        }
+
+        .card {
+            width: 90%;
+            max-width: 1000px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 0 25px rgba(0, 255, 255, 0.2);
+            padding: 30px;
+            transition: all 0.3s ease-in-out;
+        }
+
+        .card h2,
+        .card h3 {
+            color: #00ffff;
+            margin-bottom: 15px;
+        }
+
+        .card p {
+            margin-bottom: 20px;
+            line-height: 1.6;
+            color: #d0d0d0;
+        }
+
+        pre {
+            background: rgba(255, 255, 255, 0.03);
+            padding: 20px;
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            color: #00ffcc;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            overflow-x: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h2>Repo: {{ item.repo_name }}</h2>
+        <p><strong>File:</strong> {{ item.file_path }}</p>
+        <p><strong>Date:</strong> {{ item.created_at }}</p>
+
+        <h3>Code:</h3>
+        <pre>{{ item.code }}</pre>
+
+        <h3>Analysis:</h3>
+        <p>{{ item.analysis }}</p>
+
+        <h3>Bug Analysis:</h3>
+        <p>{{ item.bug_analysis }}</p>
+
+        <h3>Chat History:</h3>
+        <p>{{ item.chat_history|linebreaksbr }}</p>
+    </div>
+</body>
+</html>

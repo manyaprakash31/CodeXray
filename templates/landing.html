@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>CodeXray - Landing</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #0d1117;
+            color: #c9d1d9;
+        }
+
+        header {
+            display: flex;
+            justify-content: flex-end;
+            padding: 20px 40px;
+            background-color: #161b22;
+            box-shadow: 0 2px 8px rgba(0, 255, 255, 0.1);
+        }
+
+        header a {
+            margin-left: 20px;
+            text-decoration: none;
+            color: #58a6ff;
+            font-weight: bold;
+        }
+
+        .main-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 85vh;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 3rem;
+            color: #58a6ff;
+            text-shadow: 0 0 10px #58a6ff;
+            margin-bottom: 50px;
+        }
+
+        .btn-container {
+            display: flex;
+            gap: 40px;
+            flex-wrap: wrap;
+        }
+
+        .neon-btn {
+            background-color: transparent;
+            color: #00ffff;
+            border: 2px solid #00ffff;
+            padding: 15px 30px;
+            font-size: 1.1rem;
+            border-radius: 8px;
+            text-decoration: none;
+            transition: 0.3s;
+            box-shadow: 0 0 8px #00ffff;
+        }
+
+        .neon-btn:hover {
+            background-color: #00ffff;
+            color: #0d1117;
+            box-shadow: 0 0 20px #00ffff, 0 0 40px #00ffff;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <a href="/users/login/">Login</a>
+        <a href="/users/signup/">Signup</a>
+    </header>
+
+    <div class="main-container">
+        <h1>Welcome to CodeXray</h1>
+        <div class="btn-container">
+            <a href="/analyze/" class="neon-btn">Analyze GitHub Profile</a>
+            <a href="{% url 'bug_detector:code_debugger' %}" class="neon-btn">Code Debugger</a>
+        </div>
+    </div>
+</body>
+</html>

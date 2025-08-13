@@ -1,0 +1,30 @@
+<div class="container mt-5">
+  <!-- Code Analysis Section -->
+  <div class="card shadow-sm rounded mb-4">
+    <div class="card-body">
+      <h2 class="card-title mb-3">📊 Code Analysis</h2>
+      <p class="card-text">{{ analysis }}</p>
+    </div>
+  </div>
+
+  <!-- Chatbot Section -->
+  <div class="card shadow-sm rounded">
+    <div class="card-body">
+      <h3 class="card-title mb-3">🤖 Ask the Bot About This File</h3>
+      <form method="post" action="{% url 'chat_about_file' %}">
+        {% csrf_token %}
+        <div class="input-group mb-3">
+          <input type="text" name="question" class="form-control" placeholder="Type your question here..." required>
+          <button type="submit" class="btn btn-primary">Ask</button>
+        </div>
+      </form>
+
+      {% if answer %}
+        <div class="mt-4">
+          <h5 class="fw-bold">💬 Bot's Answer:</h5>
+          <pre class="bg-light p-3 rounded">{{ answer }}</pre>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</div>

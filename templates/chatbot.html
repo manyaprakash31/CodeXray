@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Code Chatbot</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #0f0f0f;
+      margin: 0;
+      padding: 0;
+      color: #fff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .glass-card {
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 16px;
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 30px;
+      width: 90%;
+      max-width: 700px;
+      box-shadow: 0 0 30px rgba(0, 255, 255, 0.1);
+    }
+
+    h2 {
+      margin-bottom: 20px;
+      font-weight: bold;
+      text-align: center;
+      color: #00ffe7;
+      text-shadow: 0 0 10px #00ffe7;
+    }
+
+    #chat-box {
+      background-color: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      padding: 15px;
+      height: 300px;
+      overflow-y: scroll;
+      margin-bottom: 15px;
+      font-size: 15px;
+    }
+
+    .user {
+      color: #00aaff;
+      font-weight: bold;
+    }
+
+    .bot {
+      color: #39ff14;
+      font-weight: bold;
+    }
+
+    form {
+      display: flex;
+      gap: 10px;
+    }
+
+    input[type="text"] {
+      flex: 1;
+      padding: 10px 15px;
+      border: none;
+      border-radius: 8px;
+      background-color: rgba(255, 255, 255, 0.08);
+      color: #fff;
+      font-size: 15px;
+      outline: none;
+    }
+
+    button {
+      padding: 10px 20px;
+      background-color: #00ffe7;
+      color: #000;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: background 0.3s ease;
+      box-shadow: 0 0 10px #00ffe7;
+    }
+
+    button:hover {
+      background-color: #00bfa6;
+      box-shadow: 0 0 15px #00bfa6;
+    }
+  </style>
+</head>
+<body>
+  <div class="glass-card">
+    <h2>🤖 Code Q&A Chatbot</h2>
+    <div id="chat-box"></div>
+
+    <form id="chat-form">
+      <input type="text" id="question" placeholder="Ask about the code..." required />
+      <button type="submit">Send</button>
+    </form>
+  </div>
+
+  <script>
+    const chatBox = document.getElementById("chat-box");
+    const form = document.getElementById("chat-form");
+    const questionInput = document.getElementById("question");
+
+    form.addEventListener("submit", async function (e) {
+      e.preventDefault();
+      const question = questionInput.value.trim();
+      if (!question) return;
+
+      chatBox.innerHTML += `<div><span class="user">You:</span> ${question}</div>`;
+      questionInput.value = "";
+
+      const response = await fetch("/chatbot/", {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: new URLSearchParams({ question })
+      });
+
+      const data = await response.json();
+      chatBox.innerHTML += `<div><span class="bot">Bot:</span> ${data.response}</div>`;
+      chatBox.scrollTop = chatBox.scrollHeight;
+    });
+  </script>
+</body>
+</html>

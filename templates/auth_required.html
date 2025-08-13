@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Login or Signup</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+            height: 100vh;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 40px;
+            backdrop-filter: blur(12px);
+            box-shadow: 0 0 25px rgba(0, 255, 255, 0.1), 0 0 50px rgba(0, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            text-align: center;
+            max-width: 400px;
+            width: 90%;
+        }
+
+        .glass-card h2 {
+            margin-bottom: 30px;
+            font-size: 24px;
+        }
+
+        a.button {
+            display: inline-block;
+            margin: 10px;
+            padding: 12px 24px;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 10px;
+            text-decoration: none;
+            color: #00ffff;
+            background: rgba(0, 0, 0, 0.6);
+            border: 1px solid #00ffff;
+            box-shadow: 0 0 10px #00ffff;
+            transition: all 0.3s ease;
+        }
+
+        a.button:hover {
+            background: #00ffff;
+            color: #000;
+            box-shadow: 0 0 20px #00ffff, 0 0 30px #00ffff;
+        }
+    </style>
+</head>
+<body>
+    <div class="glass-card">
+        <h2>You must be logged in to view your code history</h2>
+        <a href="{% url 'login' %}" class="button">🔐 Login</a>
+        <a href="{% url 'signup' %}" class="button">📝 Sign Up</a>
+    </div>
+</body>
+</html>

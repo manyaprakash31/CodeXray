@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Your Debug History</title>
+    <style>
+        body {
+            background: #0f0f0f;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: #e0e0e0;
+            padding: 40px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #00f0ff;
+            text-shadow: 0 0 10px #00f0ff;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            padding: 20px;
+            margin: 20px auto;
+            max-width: 800px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.2);
+            border: 1px solid rgba(0, 255, 255, 0.1);
+        }
+
+        .card strong {
+            color: #aaffff;
+            text-shadow: 0 0 5px #00ffff;
+        }
+
+        .card pre {
+            background: rgba(255, 255, 255, 0.02);
+            padding: 10px;
+            border-radius: 10px;
+            overflow-x: auto;
+            color: #ffffff;
+            border: 1px solid rgba(0, 255, 255, 0.1);
+        }
+
+        .card em {
+            display: block;
+            text-align: right;
+            margin-top: 10px;
+            color: #888;
+        }
+
+        p {
+            text-align: center;
+            color: #777;
+        }
+    </style>
+</head>
+<body>
+    <h1>Debug History</h1>
+    {% for item in history %}
+        <div class="card">
+            <strong>Input:</strong>
+            <pre>{{ item.input_code }}</pre>
+            <strong>Corrected:</strong>
+            <pre>{{ item.corrected_code }}</pre>
+            <em>{{ item.created_at }}</em>
+        </div>
+    {% empty %}
+        <p>No history yet.</p>
+    {% endfor %}
+</body>
+</html>
